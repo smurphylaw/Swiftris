@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 Murphy. All rights reserved.
 //
 
+import Foundation
+
 let NumColumns = 10
 let NumRows = 20
 
@@ -16,7 +18,7 @@ let PreviewColumn = 12
 let PreviewRow = 1
 
 let PointsPerLine = 10
-let LevelThreshold = 1000
+let LevelThreshold = 100
 
 protocol SwiftrisDelegate {
     // Invoked when the current round of Swiftris ends
@@ -46,6 +48,10 @@ class Swiftris {
     
     var score: Int
     var level: Int
+    var timerFinishedAt: NSDate
+    var levelLength = 20.0
+    var timer: NSTimer
+    var timeLeftAfterPausing: NSTimeInterval
     
     init() {
         score = 0
@@ -53,6 +59,9 @@ class Swiftris {
         fallingShape = nil
         nextShape = nil
         blockArray = Array2D<Block>(columns: NumColumns, rows: NumRows)
+        timer = NSTimer()
+        timerFinishedAt = NSDate()
+        timeLeftAfterPausing = 0
     }
     
     func beginGame() {
@@ -61,6 +70,18 @@ class Swiftris {
         }
         
         delegate?.gameDidBegin(self)
+        // Debug kludge - increase difficulty every n seconds
+        
+        timer = NSTimer.scheduledTimerWithTimeInterval(levelLength, target: self, selector:Selector("levelUp"), userInfo: nil, repeats: false)
+        timerFinishedAt = NSDate(timeIntervalSinceNow: levelLength)
+
+    }
+    
+    @objc func levelUp() {
+        level += 1
+        delegate?.gameDidLevelUp(self)
+        timer = NSTimer.scheduledTimerWithTimeInterval(levelLength, target: self, selector:Selector("levelUp"), userInfo: nil, repeats: false)
+        timerFinishedAt = NSDate(timeIntervalSinceNow: levelLength)
     }
     
     func newShape() -> (fallingShape: Shape?, nextShape: Shape?) {
@@ -142,8 +163,8 @@ class Swiftris {
         let pointsEarned = removedLines.count * PointsPerLine * level
         score += pointsEarned
         if score >= level * LevelThreshold {
-            level += 1
-            delegate?.gameDidLevelUp(self)
+            //delegate?.gameDidLevelUp(self)
+            levelUp()
         }
         
         var fallenBlocks = Array<Array<Block>>()

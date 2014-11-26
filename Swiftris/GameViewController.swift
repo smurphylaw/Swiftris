@@ -8,6 +8,7 @@
 
 import UIKit
 import SpriteKit
+import GameKit
 
 class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognizerDelegate {
     
@@ -18,6 +19,7 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
 
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var levelLabel: UILabel!
+    @IBOutlet weak var pauseButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +27,7 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
         // Configure the view
         let skView = view as SKView
         skView.multipleTouchEnabled = false
+//        skView.gestureRecognizers?.append(self.view.gestureRecognizers!.last)
         
         // Create and configure the scene
         scene = GameScene(size: skView.bounds.size)
@@ -45,8 +48,28 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
         return true
     }
     
+    @IBAction func pauseGame() {
+        if (self.scene.view?.paused == true) {
+            self.scene.view?.paused = false;
+            self.scene.startTicking();
+            self.swiftris.timer = NSTimer.scheduledTimerWithTimeInterval(self.swiftris.timeLeftAfterPausing, target: swiftris, selector:Selector("levelUp"), userInfo: nil, repeats: false)
+            self.swiftris.timerFinishedAt = NSDate(timeIntervalSinceNow: self.swiftris.timeLeftAfterPausing)
+            
+        } else {
+            self.scene.view?.paused = true;
+            self.scene.stopTicking();
+            self.swiftris.timer.invalidate();
+            self.swiftris.timeLeftAfterPausing = self.swiftris.timerFinishedAt.timeIntervalSinceDate(NSDate())
+            
+            println("paused with \(swiftris.timeLeftAfterPausing) seconds left")
+        }
+    }
+    
     @IBAction func didTap(sender: UITapGestureRecognizer) {
-        swiftris.rotateShape()
+        let currentPoint = sender.locationInView(self.view)
+        if (true != CGRectContainsPoint(self.pauseButton.frame, currentPoint)) {
+            swiftris.rotateShape()
+        }
     }
     
     @IBAction func didPan(sender: UIPanGestureRecognizer) {
@@ -164,4 +187,30 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
     func gameShapeDidMove(swiftris: Swiftris) {
         scene.redrawShape(swiftris.fallingShape!) {}
     }
+    
+    
+    func authenticateLocalPlayer() {
+        var localPlayer = GKLocalPlayer()
+        var gameCenterEnabled = Bool()
+        
+        localPlayer.authenticateHandler = {(viewController : UIViewController!, error : NSError!) -> Void in
+            if viewController != nil {
+                self.presentViewController(viewController, animated: true, completion: nil)
+            } else {
+                if localPlayer.authenticated {
+                    self.gameCenterEnabled = true
+                    
+                    localPlayer.loadDefaultLeaderboardIdentifierWithCompletionHandler({ (leaderboardIdentifier : String!, error : NSError!) -> Void in
+                        if error != nil {
+                            println(error.localizedDescription)
+                        } else {
+                            self.leaderboardIdentifier = leardboardIdentifier
+                        }
+                    })
+                } else {
+                    self.gameCenterEnabled = false
+                }
+            }
+    }
+    
 }

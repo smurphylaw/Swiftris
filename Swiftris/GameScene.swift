@@ -19,6 +19,7 @@ class GameScene: SKScene {
     let LayerPosition = CGPoint(x: 6, y: -6)
     
     var tick:( () -> () )?
+    var level = 1;
     var tickLengthMillis = TickLengthLevelOne
     var lastTick:NSDate?
     
@@ -75,6 +76,16 @@ class GameScene: SKScene {
     
     func stopTicking() {
         lastTick = nil
+    }
+    
+    func increaseDifficulty() {
+        setDifficulty(level+1);
+    }
+    
+    func setDifficulty(newDifficulty: Int) {
+        let speedupFactor = 100.0;
+        tickLengthMillis = (TickLengthLevelOne - speedupFactor * Double(newDifficulty))
+        level = newDifficulty;
     }
     
     func pointForColumn(column: Int, row: Int) -> CGPoint {
@@ -142,7 +153,7 @@ class GameScene: SKScene {
                 let sprite = block.sprite!
                 
                 let delay = (NSTimeInterval(columnIdx) * 0.05) + (NSTimeInterval(blockIdx) * 0.05)
-                let duration = NSTimeInterval(((sprite.position.y - newPosition.y) - BlockSize) * 0.1)
+                let duration = NSTimeInterval(((sprite.position.y - newPosition.y) - BlockSize) * 0.001)
                 let moveAction = SKAction.moveTo(newPosition, duration: duration)
                 moveAction.timingMode = .EaseOut
                 sprite.runAction(SKAction.sequence([SKAction.waitForDuration(delay), moveAction]))
@@ -159,7 +170,7 @@ class GameScene: SKScene {
                 var point = pointForColumn(block.column, row: block.row)
                 point = CGPointMake(point.x + (goLeft ? -randomRadius : randomRadius), point.y)
                 
-                let randomDuration = (NSTimeInterval(arc4random_uniform(2)) + 0.5) * 10
+                let randomDuration = (NSTimeInterval(arc4random_uniform(2)) + 0.5) * 1
 
                 
                 var startAngle = CGFloat(M_PI)
