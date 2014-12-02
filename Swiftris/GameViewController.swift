@@ -11,23 +11,27 @@ import SpriteKit
 import GameKit
 
 class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognizerDelegate {
-    
+
     var scene: GameScene!
     var swiftris: Swiftris!
+    var gamekit: GameKitHelper!
     
     var panPointReference:CGPoint?
+    
 
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var levelLabel: UILabel!
     @IBOutlet weak var pauseButton: UIButton!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Configure the view
+//        let skView = SKView(frame: view.frame)
+//                view.addSubview(skView)
         let skView = view as SKView
         skView.multipleTouchEnabled = false
-//        skView.gestureRecognizers?.append(self.view.gestureRecognizers!.last)
+        // skView.gestureRecognizers?.append(self.view.gestureRecognizers!.last)
         
         // Create and configure the scene
         scene = GameScene(size: skView.bounds.size)
@@ -37,10 +41,13 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
         
         swiftris = Swiftris()
         swiftris.delegate = self
-        swiftris.beginGame()
+
         
         // Present the scene
         skView.presentScene(scene)
+        swiftris.beginGame()
+        self.pauseButton.setTitle("Start", forState: UIControlState.Normal)
+        pauseGame()
 
     }
 
@@ -54,7 +61,7 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
             self.scene.startTicking();
             self.swiftris.timer = NSTimer.scheduledTimerWithTimeInterval(self.swiftris.timeLeftAfterPausing, target: swiftris, selector:Selector("levelUp"), userInfo: nil, repeats: false)
             self.swiftris.timerFinishedAt = NSDate(timeIntervalSinceNow: self.swiftris.timeLeftAfterPausing)
-            
+            self.pauseButton.setTitle("Pause", forState: UIControlState.Normal)
         } else {
             self.scene.view?.paused = true;
             self.scene.stopTicking();
@@ -147,6 +154,8 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
         scene.animateCollapsingLines(swiftris.removeAllBlocks(), fallenBlocks: Array<Array<Block>>()) {
             swiftris.beginGame()
         }
+        // gamekit.reportScores()
+        // gamekit.updateAchievements()
     }
     
     func gameDidLevelUp(swiftris: Swiftris) {
@@ -186,31 +195,6 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
     
     func gameShapeDidMove(swiftris: Swiftris) {
         scene.redrawShape(swiftris.fallingShape!) {}
-    }
-    
-    
-    func authenticateLocalPlayer() {
-        var localPlayer = GKLocalPlayer()
-        var gameCenterEnabled = Bool()
-        
-        localPlayer.authenticateHandler = {(viewController : UIViewController!, error : NSError!) -> Void in
-            if viewController != nil {
-                self.presentViewController(viewController, animated: true, completion: nil)
-            } else {
-                if localPlayer.authenticated {
-                    self.gameCenterEnabled = true
-                    
-                    localPlayer.loadDefaultLeaderboardIdentifierWithCompletionHandler({ (leaderboardIdentifier : String!, error : NSError!) -> Void in
-                        if error != nil {
-                            println(error.localizedDescription)
-                        } else {
-                            self.leaderboardIdentifier = leardboardIdentifier
-                        }
-                    })
-                } else {
-                    self.gameCenterEnabled = false
-                }
-            }
     }
     
 }

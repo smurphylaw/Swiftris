@@ -70,7 +70,7 @@ class Swiftris {
         }
         
         delegate?.gameDidBegin(self)
-        // Debug kludge - increase difficulty every n seconds
+        // increase difficulty every n seconds
         
         timer = NSTimer.scheduledTimerWithTimeInterval(levelLength, target: self, selector:Selector("levelUp"), userInfo: nil, repeats: false)
         timerFinishedAt = NSDate(timeIntervalSinceNow: levelLength)
