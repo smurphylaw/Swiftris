@@ -10,25 +10,26 @@ import UIKit
 import SpriteKit
 import GameKit
 
+
 class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognizerDelegate {
 
+    var gameMode: GameMode = .Classic;
     var scene: GameScene!
     var swiftris: Swiftris!
     var gamekit: GameKitHelper!
     
     var panPointReference:CGPoint?
-    
 
+    
     @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var levelLabel: UILabel!
     @IBOutlet weak var pauseButton: UIButton!
+    @IBOutlet weak var modeLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Configure the view
-//        let skView = SKView(frame: view.frame)
-//                view.addSubview(skView)
         let skView = view as SKView
         skView.multipleTouchEnabled = false
         // skView.gestureRecognizers?.append(self.view.gestureRecognizers!.last)
@@ -46,7 +47,8 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
         // Present the scene
         skView.presentScene(scene)
         swiftris.beginGame()
-        self.pauseButton.setTitle("Start", forState: UIControlState.Normal)
+        pauseButton.setTitle("Start", forState: UIControlState.Normal)
+        modeLabel.text = (gameMode == GameMode.Classic ? "Classic" : "Timed")
         pauseGame()
 
     }

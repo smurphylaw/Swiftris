@@ -10,6 +10,12 @@ import Foundation
 import GameKit
 import UIKit
 
+
+enum GameMode {
+    case Classic
+    case Timed
+}
+
 class GameKitHelper {
     
     var scene: GameScene!

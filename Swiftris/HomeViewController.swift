@@ -23,17 +23,23 @@ class HomeViewController: UIViewController {
         gamekit.authenticateLocalPlayer(self)
     }
     
-    @IBAction func classicModeButtonPressed(sender: UIButton) {
-        gameController = GameViewController()
-        self.view.window?.rootViewController?.presentViewController(gameController, animated: true, completion: nil)
-    }
-    
-    @IBAction func timedModeButtonPressed(sender: UIButton) {
-        
-    }
+
     
     @IBAction func gameCenterPreseed(sender: AnyObject) {
         gamekit.showLeaderboardAndAchievement(true)
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        gameController = segue.destinationViewController as GameViewController
+
+        switch (segue.identifier!) {
+            case "classicMode":
+                gameController.gameMode = .Classic;
+            case "timedMode":
+                gameController.gameMode = .Timed;
+            default:
+                println("No Identifiable Game Mode \(segue.identifier)")
+        }
+    }
 }
+
