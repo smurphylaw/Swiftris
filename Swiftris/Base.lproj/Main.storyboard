@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="j56-Mt-R7R">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="j56-Mt-R7R">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
@@ -22,7 +22,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="classicModeButtonPressed:" destination="j56-Mt-R7R" eventType="touchUpInside" id="Wtz-Tk-3Mb"/>
+                                    <segue destination="LVB-YS-i5n" kind="show" identifier="classicMode" id="bq7-ya-g1O"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qga-CN-ak2">
@@ -32,6 +32,7 @@
                                 </state>
                                 <connections>
                                     <action selector="timedModeButtonPressed:" destination="j56-Mt-R7R" eventType="touchUpInside" id="V9d-Jm-VPV"/>
+                                    <segue destination="LVB-YS-i5n" kind="show" identifier="timedMode" id="B0n-7I-eNw"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Swiftris" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mvP-zW-8zz">
@@ -57,7 +58,6 @@
                         <outlet property="classicModeButton" destination="3wG-9W-j9g" id="EEH-ew-X3A"/>
                         <outlet property="gameCenterButton" destination="bjw-5x-iDS" id="iGv-JI-0RV"/>
                         <outlet property="timedModeButton" destination="qga-CN-ak2" id="IVu-dV-44b"/>
-                        <segue destination="LVB-YS-i5n" kind="show" id="R85-di-lzN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a0v-vw-5S9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -116,8 +116,14 @@
                                     </label>
                                 </subviews>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Classic" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CVO-di-dsO">
+                                <rect key="frame" x="224" y="5" width="84" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8j0-Lb-3iB">
-                                <rect key="frame" x="137" y="489" width="46" height="30"/>
+                                <rect key="frame" x="101" y="435" width="118" height="50"/>
                                 <state key="normal" title="Pause">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -138,6 +144,7 @@
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
                         <outlet property="levelLabel" destination="dge-7A-2Ql" id="z6b-rP-wLh"/>
+                        <outlet property="modeLabel" destination="CVO-di-dsO" id="YYG-52-0Ip"/>
                         <outlet property="pauseButton" destination="8j0-Lb-3iB" id="4MS-Ut-3mh"/>
                         <outlet property="scoreLabel" destination="uKH-lO-FfE" id="L4C-W8-nla"/>
                     </connections>
@@ -168,4 +175,7 @@
     <resources>
         <image name="whitebg.png" width="84" height="100"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="B0n-7I-eNw"/>
+    </inferredMetricsTieBreakers>
 </document>
