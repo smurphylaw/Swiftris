@@ -41,6 +41,8 @@ protocol SwiftrisDelegate {
 }
 
 class Swiftris {
+    var gameModeTimed: GameMode = .Timed
+    
     var blockArray:Array2D<Block>
     var nextShape: Shape?
     var fallingShape: Shape?

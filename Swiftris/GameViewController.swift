@@ -17,6 +17,7 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
     var scene: GameScene!
     var swiftris: Swiftris!
     var gamekit: GameKitHelper!
+    var homeController: HomeViewController?
     
     var panPointReference:CGPoint?
 
@@ -25,6 +26,8 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
     @IBOutlet weak var levelLabel: UILabel!
     @IBOutlet weak var pauseButton: UIButton!
     @IBOutlet weak var modeLabel: UILabel!
+    @IBOutlet weak var homeButton: UIButton!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,11 +61,16 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
     }
     
     @IBAction func pauseGame() {
+        
         if (self.scene.view?.paused == true) {
             self.scene.view?.paused = false;
             self.scene.startTicking();
-            self.swiftris.timer = NSTimer.scheduledTimerWithTimeInterval(self.swiftris.timeLeftAfterPausing, target: swiftris, selector:Selector("levelUp"), userInfo: nil, repeats: false)
-            self.swiftris.timerFinishedAt = NSDate(timeIntervalSinceNow: self.swiftris.timeLeftAfterPausing)
+            
+            if (gameMode != GameMode.Classic) {
+                self.swiftris.timer = NSTimer.scheduledTimerWithTimeInterval(self.swiftris.timeLeftAfterPausing, target: swiftris, selector:Selector("levelUp"), userInfo: nil, repeats: false)
+                self.swiftris.timerFinishedAt = NSDate(timeIntervalSinceNow: self.swiftris.timeLeftAfterPausing)
+            }
+            
             self.pauseButton.setTitle("Pause", forState: UIControlState.Normal)
         } else {
             self.scene.view?.paused = true;
@@ -72,6 +80,11 @@ class GameViewController: UIViewController, SwiftrisDelegate, UIGestureRecognize
             
             println("paused with \(swiftris.timeLeftAfterPausing) seconds left")
         }
+    }
+    
+    @IBAction func homeButtonPressed(sender: AnyObject) {
+        scene.stopTicking()
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func didTap(sender: UITapGestureRecognizer) {

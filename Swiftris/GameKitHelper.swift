@@ -23,14 +23,7 @@ class GameKitHelper {
     
     var gameCenterEnabled: Bool
     var leaderboardIdentifier: String
-    
-    /*
-    required init(coder aDecoder: NSCoder) {
-        gameCenterEnabled = true;
-        leaderboardIdentifier = "";
-        super.init(coder: aDecoder)
-    }
-    */
+
     
     init () {
         gameCenterEnabled = true
@@ -91,7 +84,7 @@ class GameKitHelper {
         vc.view.window?.rootViewController?.presentViewController(gcViewController, animated: true, completion: nil)
     }
     
-    /* func updateAchievements() {
+    /*func updateAchievements() {
         var achievementIdentifier: NSString
         var progressPercentage = 0.0
         var progressInLevelAchievement: Bool = false
@@ -107,14 +100,21 @@ class GameKitHelper {
         scoreAchievement?.identifier = achievementIdentifier
         scoreAchievement?.percentComplete = progressPercentage
         
-        var achievements: NSArray = [levelAchievement, scoreAchievement]
-        
-        GKAchievement.reportAchievements(achievements, withCompletionHandler: { (error: NSError!) -> Void in
+        var theAchievements: [AnyObject?] = [levelAchievement, scoreAchievement]
+        /*
+        GKAchievement.reportAchievements(achievements:theAchievements, withCompletionHandler: { (error: NSError!) -> Void in
             if (error != nil) {
                 println("Error: " + error.localizedDescription)
             }
         })
-    } */
+        */
+        GKAchievement.reportAchievements([theAchievements],
+            withEligibleChallenges:nil, withCompletionHandler: { (error: NSError!) -> Void in
+            if (error != nil) {
+                println("Error: " + error.localizedDescription)
+            }
+        })
+    }*/
     
     func resetAchievements() {
         GKAchievement.resetAchievementsWithCompletionHandler { (error: NSError!) -> Void in
